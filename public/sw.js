@@ -1,22 +1,12 @@
-// Colorist PWA - Offline-First Service Worker
-const CACHE_NAME = "colorist-pwa-v1";
-const ASSETS_TO_CACHE = [
-  "/",
-  "/index.html",
-  "/manifest.webmanifest",
-  "/icon.svg"
-];
+// Colorist PWA - Offline-First Service Worker (Resilient Subpath Support)
+const CACHE_NAME = "colorist-pwa-v2";
 
-// Install: Cache core application shell
+// Install: Pre-cache relative scope base
 self.addEventListener("install", (event) => {
-  event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(ASSETS_TO_CACHE);
-    }).then(() => self.skipWaiting())
-  );
+  self.skipWaiting();
 });
 
-// Activate: Clean old caches
+// Activate: Clean up older cache versions and take immediate control
 self.addEventListener("activate", (event) => {
   event.waitUntil(
     caches.keys().then((keys) => {
@@ -31,37 +21,53 @@ self.addEventListener("activate", (event) => {
   );
 });
 
-// Fetch: Stale-While-Revalidate for app assets, Network-First with Rule Fallback for API
+// Fetch: Network First with Cache Fallback for maximum reliability
 self.addEventListener("fetch", (event) => {
   const { request } = event;
-  const url = new URL(request.url);
 
-  // For API endpoints, rely on network with offline fallback
-  if (url.pathname.startsWith("/api/")) {
+  // Do not intercept non-GET requests or browser extension/chrome-extension requests
+  if (request.method !== "GET" || !request.url.startsWith("http")) {
     return;
   }
 
-  // Stale-While-Revalidate for static resources
-  event.respondWith(
-    caches.match(request).then((cachedResponse) => {
-      const fetchPromise = fetch(request)
-        .then((networkResponse) => {
-          if (networkResponse && networkResponse.status === 200 && networkResponse.type === "basic") {
-            const responseToCache = networkResponse.clone();
-            caches.open(CACHE_NAME).then((cache) => {
-              cache.put(request, responseToCache);
-            });
-          }
-          return networkResponse;
-        })
-        .catch(() => {
-          // If offline and request is HTML document, return cached root
-          if (request.headers.get("accept")?.includes("text/html")) {
-            return caches.match("/index.html");
-          }
-        });
+  const url = new URL(request.url);
 
-      return cachedResponse || fetchPromise;
-    })
+  // Skip dynamic backend API calls
+  if (url.pathname.includes("/api/")) {
+    return;
+  }
+
+  // Network-First with Cache Fallback
+  event.respondWith(
+    fetch(request)
+      .then((networkResponse) => {
+        // Only cache valid successful GET responses
+        if (networkResponse && networkResponse.status === 200) {
+          const responseToCache = networkResponse.clone();
+          caches.open(CACHE_NAME).then((cache) => {
+            cache.put(request, responseToCache);
+          }).catch(() => {});
+        }
+        return networkResponse;
+      })
+      .catch(async () => {
+        // When network fails (offline), try the cache
+        const cached = await caches.match(request);
+        if (cached) {
+          return cached;
+        }
+
+        // If it's a navigation (HTML document request) and offline, return cached root/index if available
+        if (request.mode === "navigate" || request.headers.get("accept")?.includes("text/html")) {
+          const rootCached = await caches.match(self.registration.scope);
+          if (rootCached) return rootCached;
+        }
+
+        return new Response("Offline mode - network request failed", {
+          status: 503,
+          statusText: "Service Unavailable",
+          headers: { "Content-Type": "text/plain; charset=utf-8" },
+        });
+      })
   );
 });
