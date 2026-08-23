@@ -5,37 +5,70 @@ import { Sparkles, CheckCircle2, Layers, Smartphone, ArrowRight } from "lucide-r
 export const WelcomeModal: React.FC = () => {
   const [show, setShow] = useState<boolean>(false);
 
+  const triggerCelebration = () => {
+    (window as any).pwaPopupActive = "welcome";
+    setShow(true);
+
+    try {
+      // Fire confetti burst 1
+      confetti({
+        particleCount: 90,
+        spread: 70,
+        origin: { y: 0.6 },
+        colors: ["#6366f1", "#f59e0b", "#10b981", "#ec4899", "#3b82f6"]
+      });
+      // Fire confetti burst 2 with slight delay
+      setTimeout(() => {
+        confetti({
+          particleCount: 50,
+          angle: 60,
+          spread: 55,
+          origin: { x: 0 },
+          colors: ["#6366f1", "#f59e0b", "#10b981"]
+        });
+        confetti({
+          particleCount: 50,
+          angle: 120,
+          spread: 55,
+          origin: { x: 1 },
+          colors: ["#6366f1", "#ec4899", "#3b82f6"]
+        });
+      }, 250);
+    } catch (e) {
+      console.warn("Confetti error:", e);
+    }
+  };
+
   useEffect(() => {
-    // Check if running in standalone mode (installed PWA)
+    // 1. Check if running in standalone mode (installed PWA)
     const isStandalone =
       window.matchMedia("(display-mode: standalone)").matches ||
       (window.navigator as any).standalone ||
       document.referrer.includes("android-app://") ||
-      window.location.search.includes("mode=standalone");
+      window.location.search.includes("mode=standalone") ||
+      window.location.search.includes("pwa=1");
 
-    if (isStandalone) {
-      const welcomeShown =
-        localStorage.getItem("hasSeenWelcome") ||
-        localStorage.getItem("installed_welcome_shown");
+    const welcomeShown =
+      localStorage.getItem("hasSeenWelcome") ||
+      localStorage.getItem("installed_welcome_shown");
 
-      if (!welcomeShown) {
-        // Coordinate popup lock
-        if (!(window as any).pwaPopupActive) {
-          (window as any).pwaPopupActive = "welcome";
-          setShow(true);
-
-          try {
-            confetti({
-              particleCount: 80,
-              spread: 70,
-              origin: { y: 0.6 },
-            });
-          } catch (e) {
-            console.warn("Confetti error:", e);
-          }
-        }
-      }
+    if (isStandalone && !welcomeShown) {
+      const timer = setTimeout(() => {
+        triggerCelebration();
+      }, 500);
+      return () => clearTimeout(timer);
     }
+
+    // 2. Listen for post-install success event
+    const handleInstalledSuccess = () => {
+      triggerCelebration();
+    };
+
+    window.addEventListener("pwa-installed-success", handleInstalledSuccess);
+
+    return () => {
+      window.removeEventListener("pwa-installed-success", handleInstalledSuccess);
+    };
   }, []);
 
   const handleStart = () => {
@@ -49,11 +82,11 @@ export const WelcomeModal: React.FC = () => {
   if (!show) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/75 backdrop-blur-md animate-in fade-in duration-300">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md animate-in fade-in duration-300">
       <div className="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-200 text-center space-y-5 animate-in zoom-in-95 duration-200">
         
         {/* Celebration Badge */}
-        <div className="w-16 h-16 rounded-3xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-amber-500 p-[2px] mx-auto shadow-lg shadow-indigo-500/25">
+        <div className="w-16 h-16 rounded-3xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-amber-500 p-[2px] mx-auto shadow-xl shadow-indigo-500/30">
           <div className="w-full h-full bg-white rounded-[22px] flex items-center justify-center">
             <Sparkles className="w-8 h-8 text-indigo-600 animate-pulse" />
           </div>
@@ -93,7 +126,7 @@ export const WelcomeModal: React.FC = () => {
         {/* Action Button */}
         <button
           onClick={handleStart}
-          className="w-full py-3 bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800 text-white text-sm font-bold rounded-2xl shadow-md shadow-indigo-600/30 flex items-center justify-center gap-2 transition-all active:scale-98 cursor-pointer"
+          className="w-full py-3.5 bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800 text-white text-sm font-bold rounded-2xl shadow-lg shadow-indigo-600/30 flex items-center justify-center gap-2 transition-all active:scale-98 cursor-pointer"
         >
           <span>Начать работу</span>
           <ArrowRight className="w-4 h-4" />
