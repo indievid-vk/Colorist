@@ -1,12 +1,15 @@
 import React from "react";
 import { ApplicationMode } from "../types";
-import { Sparkles, Shirt, Home, Layers, BookOpen, BookmarkCheck } from "lucide-react";
+import { Sparkles, Shirt, Home, Layers, BookOpen, BookmarkCheck, Info } from "lucide-react";
 
 interface HeaderProps {
   mode: ApplicationMode;
   onModeChange: (mode: ApplicationMode) => void;
   onOpenGuide: () => void;
   onOpenSaved: () => void;
+  onOpenAbout?: () => void;
+  onClearAll?: () => void;
+  hasItems?: boolean;
   savedCount: number;
 }
 
@@ -15,6 +18,7 @@ export const Header: React.FC<HeaderProps> = ({
   onModeChange,
   onOpenGuide,
   onOpenSaved,
+  onOpenAbout,
   savedCount,
 }) => {
   return (
@@ -58,6 +62,15 @@ export const Header: React.FC<HeaderProps> = ({
                 </span>
               )}
             </button>
+            {onOpenAbout && (
+              <button
+                onClick={onOpenAbout}
+                className="p-2 text-slate-600 hover:text-indigo-600 hover:bg-indigo-50 rounded-xl transition-colors active:scale-95"
+                title="О приложении"
+              >
+                <Info className="w-4 h-4" />
+              </button>
+            )}
           </div>
         </div>
 
@@ -119,6 +132,15 @@ export const Header: React.FC<HeaderProps> = ({
               </span>
             )}
           </button>
+          {onOpenAbout && (
+            <button
+              onClick={onOpenAbout}
+              className="p-2 text-slate-500 hover:text-indigo-600 hover:bg-indigo-50 rounded-xl border border-slate-200/90 bg-white shadow-sm transition-all cursor-pointer active:scale-95"
+              title="О приложении"
+            >
+              <Info className="w-4 h-4" />
+            </button>
+          )}
         </div>
 
       </div>

@@ -14,6 +14,11 @@ import { CameraScanner } from "./components/CameraScanner";
 import { ColorTheoryGuide } from "./components/ColorTheoryGuide";
 import { SavedPalettes } from "./components/SavedPalettes";
 import { CustomItemModal } from "./components/CustomItemModal";
+import { AboutAppModal } from "./components/AboutAppModal";
+import { BackToTopButton } from "./components/pwa/BackToTopButton";
+import { WelcomeModal } from "./components/pwa/WelcomeModal";
+import { UpdateModal } from "./components/pwa/UpdateModal";
+import { InstallPrompt } from "./components/pwa/InstallPrompt";
 
 export default function App() {
   const [mode, setMode] = useState<ApplicationMode>("clothing");
@@ -60,6 +65,7 @@ export default function App() {
 
   const [isGuideOpen, setIsGuideOpen] = useState<boolean>(false);
   const [isSavedOpen, setIsSavedOpen] = useState<boolean>(false);
+  const [isAboutOpen, setIsAboutOpen] = useState<boolean>(false);
 
   // Sync saved to localStorage
   useEffect(() => {
@@ -265,6 +271,7 @@ export default function App() {
         onModeChange={handleModeChange}
         onOpenGuide={() => setIsGuideOpen(true)}
         onOpenSaved={() => setIsSavedOpen(true)}
+        onOpenAbout={() => setIsAboutOpen(true)}
         onClearAll={handleClearAll}
         savedCount={savedOutfits.length}
         hasItems={anchor !== null || candidates.length > 0}
@@ -302,6 +309,9 @@ export default function App() {
 
       </main>
 
+      {/* Back to Top FAB Button */}
+      <BackToTopButton threshold={250} />
+
       {/* Camera & Color Scanner Modal */}
       {scannerConfig.isOpen && (
         <CameraScanner
@@ -333,6 +343,17 @@ export default function App() {
           onLoadOutfit={handleLoadSavedOutfit}
         />
       )}
+
+      {/* About App Info Modal */}
+      <AboutAppModal
+        isOpen={isAboutOpen}
+        onClose={() => setIsAboutOpen(false)}
+      />
+
+      {/* PWA Lifecycle Management Modals */}
+      <InstallPrompt />
+      <WelcomeModal />
+      <UpdateModal />
 
       {/* Minimalist Modern Light Footer */}
       <footer className="mt-auto border-t border-slate-200 bg-white/80 backdrop-blur-md py-4 px-4 text-center text-xs text-slate-500">
