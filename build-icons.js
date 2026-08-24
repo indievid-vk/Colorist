@@ -31,7 +31,7 @@ async function buildIcons() {
     const sharpModule = await import('sharp');
     const sharp = sharpModule.default || sharpModule;
 
-    console.log('Generating PWA icons from:', sourceIcon);
+    console.log('Generating RGBA PWA icons from:', sourceIcon);
 
     const targets = [
       { dir: publicDir, name: 'icon_512x512.png', size: 512 },
@@ -57,21 +57,25 @@ async function buildIcons() {
           fit: 'contain',
           background: { r: 0, g: 0, b: 0, alpha: 0 }
         })
-        .png({ compressionLevel: 9, quality: 100 })
+        .png({
+          palette: false,
+          compressionLevel: 6,
+          adaptiveFiltering: true,
+          force: true
+        })
         .toFile(dest);
-      console.log(`Generated: ${path.relative(rootDir, dest)} (${item.size}x${item.size})`);
+      console.log(`Generated RGBA: ${path.relative(rootDir, dest)} (${item.size}x${item.size})`);
     }
 
-    console.log('All PWA icons successfully generated.');
+    console.log('All PWA icons successfully generated as true 32-bit RGBA PNG.');
   } catch (err) {
     console.warn('Note: Sharp icon dynamic generation skipped, using pre-built icons:', err.message);
   }
 }
 
 buildIcons().then(() => {
-  // Exit gracefully with 0 so the build process always continues
   process.exit(0);
 }).catch((err) => {
-  console.warn('buildIcons encountered an error, continuing build with existing icons:', err);
+  console.warn('buildIcons encountered an error:', err);
   process.exit(0);
 });

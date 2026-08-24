@@ -1,9 +1,29 @@
 // Colorist PWA - Offline-First Service Worker (Resilient Subpath Support)
-const CACHE_NAME = "colorist-pwa-v5";
+const CACHE_NAME = "colorist-pwa-v6";
 
-// Install: Pre-cache relative scope base
+const PRECACHE_ASSETS = [
+  "./",
+  "./index.html",
+  "./manifest.webmanifest",
+  "./icon_192x192.png",
+  "./icon_256x256.png",
+  "./icon_512x512.png",
+  "./icon_192.png",
+  "./icon_512.png",
+  "./apple-touch-icon.png",
+  "./favicon.png",
+  "./favicon.ico"
+];
+
+// Install: Pre-cache essential app shell and icons
 self.addEventListener("install", (event) => {
-  self.skipWaiting();
+  event.waitUntil(
+    caches.open(CACHE_NAME).then((cache) => {
+      return cache.addAll(PRECACHE_ASSETS).catch((err) => {
+        console.warn("Pre-caching non-fatal warning:", err);
+      });
+    }).then(() => self.skipWaiting())
+  );
 });
 
 // Activate: Clean up older cache versions and take immediate control
@@ -59,7 +79,7 @@ self.addEventListener("fetch", (event) => {
 
         // If it's a navigation (HTML document request) and offline, return cached root/index if available
         if (request.mode === "navigate" || request.headers.get("accept")?.includes("text/html")) {
-          const rootCached = await caches.match(self.registration.scope);
+          const rootCached = await caches.match(self.registration.scope) || await caches.match("./index.html") || await caches.match("./");
           if (rootCached) return rootCached;
         }
 
