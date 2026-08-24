@@ -1,6 +1,5 @@
 import fs from 'fs';
 import path from 'path';
-import sharp from 'sharp';
 
 async function buildIcons() {
   const rootDir = process.cwd();
@@ -22,47 +21,57 @@ async function buildIcons() {
   if (!fs.existsSync(sourceIcon)) {
     sourceIcon = path.join(publicDir, 'icon_512x512.png');
   }
+  
   if (!fs.existsSync(sourceIcon)) {
-    console.error('Source icon_512x512.png not found');
+    console.warn('Source icon_512x512.png not found. Using pre-existing icons in public/.');
     return;
   }
 
-  console.log('Generating PWA icons from:', sourceIcon);
+  try {
+    const sharpModule = await import('sharp');
+    const sharp = sharpModule.default || sharpModule;
 
-  // Complete set of sizes for Android, iOS, Windows, browsers and PWA manifest
-  const targets = [
-    { dir: publicDir, name: 'icon_512x512.png', size: 512 },
-    { dir: publicDir, name: 'icon_512.png', size: 512 },
-    { dir: publicDir, name: 'pwa-512.png', size: 512 },
-    { dir: publicDir, name: 'icon_256x256.png', size: 256 },
-    { dir: publicDir, name: 'icon_256.png', size: 256 },
-    { dir: publicDir, name: 'pwa-256.png', size: 256 },
-    { dir: publicDir, name: 'icon_192x192.png', size: 192 },
-    { dir: publicDir, name: 'icon_192.png', size: 192 },
-    { dir: publicDir, name: 'pwa-192.png', size: 192 },
-    { dir: publicDir, name: 'apple-touch-icon.png', size: 180 },
-    { dir: publicDir, name: 'favicon.ico', size: 64 },
-    { dir: publicDir, name: 'favicon.png', size: 64 },
-    { dir: srcAssetsDir, name: 'icon_512x512.png', size: 512 },
-    { dir: srcAssetsDir, name: 'icon_192x192.png', size: 192 }
-  ];
+    console.log('Generating PWA icons from:', sourceIcon);
 
-  for (const item of targets) {
-    const dest = path.join(item.dir, item.name);
-    await sharp(sourceIcon)
-      .resize(item.size, item.size, {
-        fit: 'contain',
-        background: { r: 0, g: 0, b: 0, alpha: 0 }
-      })
-      .png({ compressionLevel: 9, quality: 100 })
-      .toFile(dest);
-    console.log(`Generated: ${path.relative(rootDir, dest)} (${item.size}x${item.size})`);
+    const targets = [
+      { dir: publicDir, name: 'icon_512x512.png', size: 512 },
+      { dir: publicDir, name: 'icon_512.png', size: 512 },
+      { dir: publicDir, name: 'pwa-512.png', size: 512 },
+      { dir: publicDir, name: 'icon_256x256.png', size: 256 },
+      { dir: publicDir, name: 'icon_256.png', size: 256 },
+      { dir: publicDir, name: 'pwa-256.png', size: 256 },
+      { dir: publicDir, name: 'icon_192x192.png', size: 192 },
+      { dir: publicDir, name: 'icon_192.png', size: 192 },
+      { dir: publicDir, name: 'pwa-192.png', size: 192 },
+      { dir: publicDir, name: 'apple-touch-icon.png', size: 180 },
+      { dir: publicDir, name: 'favicon.ico', size: 64 },
+      { dir: publicDir, name: 'favicon.png', size: 64 },
+      { dir: srcAssetsDir, name: 'icon_512x512.png', size: 512 },
+      { dir: srcAssetsDir, name: 'icon_192x192.png', size: 192 }
+    ];
+
+    for (const item of targets) {
+      const dest = path.join(item.dir, item.name);
+      await sharp(sourceIcon)
+        .resize(item.size, item.size, {
+          fit: 'contain',
+          background: { r: 0, g: 0, b: 0, alpha: 0 }
+        })
+        .png({ compressionLevel: 9, quality: 100 })
+        .toFile(dest);
+      console.log(`Generated: ${path.relative(rootDir, dest)} (${item.size}x${item.size})`);
+    }
+
+    console.log('All PWA icons successfully generated.');
+  } catch (err) {
+    console.warn('Note: Sharp icon dynamic generation skipped, using pre-built icons:', err.message);
   }
-
-  console.log('All PWA icons successfully generated.');
 }
 
-buildIcons().catch((err) => {
-  console.error('Error generating icons:', err);
-  process.exit(1);
+buildIcons().then(() => {
+  // Exit gracefully with 0 so the build process always continues
+  process.exit(0);
+}).catch((err) => {
+  console.warn('buildIcons encountered an error, continuing build with existing icons:', err);
+  process.exit(0);
 });
