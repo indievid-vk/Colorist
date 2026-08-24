@@ -1,5 +1,6 @@
 import React from "react";
 import { Info, Sparkles, Smartphone, ShieldCheck, Zap, AlertCircle, Heart, Mail, X } from "lucide-react";
+import appIcon from "../assets/icon_512x512.png";
 
 interface AboutAppModalProps {
   isOpen: boolean;
@@ -18,12 +19,9 @@ export const AboutAppModal: React.FC<AboutAppModalProps> = ({ isOpen, onClose })
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-2xl bg-indigo-600/10 flex items-center justify-center text-indigo-600 overflow-hidden">
               <img
-                src="./icon_512x512.png"
+                src={appIcon}
                 alt="Колорист"
                 className="w-full h-full object-cover rounded-2xl"
-                onError={(e) => {
-                  (e.target as HTMLElement).style.display = 'none';
-                }}
               />
             </div>
             <div>

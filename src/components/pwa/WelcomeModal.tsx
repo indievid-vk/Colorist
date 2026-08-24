@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import confetti from "canvas-confetti";
 import { Sparkles, CheckCircle2, Layers, Smartphone, ArrowRight } from "lucide-react";
+import appIcon from "../../assets/icon_512x512.png";
 
 export const WelcomeModal: React.FC = () => {
   const [show, setShow] = useState<boolean>(false);
@@ -88,12 +89,9 @@ export const WelcomeModal: React.FC = () => {
         {/* Celebration Badge */}
         <div className="w-16 h-16 rounded-3xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-amber-500 p-[2px] mx-auto shadow-xl shadow-indigo-500/30 overflow-hidden">
           <img
-            src="./icon_512x512.png"
+            src={appIcon}
             alt="Колорист"
             className="w-full h-full object-cover rounded-[22px]"
-            onError={(e) => {
-              (e.target as HTMLElement).style.display = 'none';
-            }}
           />
         </div>
 

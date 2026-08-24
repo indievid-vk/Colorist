@@ -1,6 +1,7 @@
 import React from "react";
 import { ApplicationMode } from "../types";
 import { Sparkles, Shirt, Home, Layers, BookOpen, BookmarkCheck, Info } from "lucide-react";
+import appIcon from "../assets/icon_512x512.png";
 
 interface HeaderProps {
   mode: ApplicationMode;
@@ -30,12 +31,9 @@ export const Header: React.FC<HeaderProps> = ({
           <div className="flex items-center gap-2.5">
             <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-amber-500 p-[1.5px] shadow-sm shadow-indigo-500/20 overflow-hidden flex-shrink-0">
               <img
-                src="./icon_512x512.png"
+                src={appIcon}
                 alt="Колорист"
                 className="w-full h-full object-cover rounded-[10px]"
-                onError={(e) => {
-                  (e.target as HTMLElement).style.display = 'none';
-                }}
               />
             </div>
             <div>
