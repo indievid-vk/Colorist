@@ -1,5 +1,5 @@
 // Colorist PWA - Offline-First Service Worker (Resilient Subpath Support)
-const CACHE_NAME = "colorist-pwa-v2";
+const CACHE_NAME = "colorist-pwa-v3";
 
 // Install: Pre-cache relative scope base
 self.addEventListener("install", (event) => {

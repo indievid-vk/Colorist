@@ -129,18 +129,18 @@ export const InstallPrompt: React.FC = () => {
       <div className="fixed bottom-6 right-4 sm:right-6 z-40 flex items-center gap-2 animate-in fade-in slide-in-from-bottom-5 duration-300">
         <button
           onClick={handleFloatingButtonClick}
-          className="relative w-14 h-14 rounded-full bg-gradient-to-tr from-indigo-600 via-indigo-500 to-amber-500 p-[2px] shadow-xl shadow-indigo-600/30 hover:shadow-indigo-600/50 hover:scale-105 active:scale-95 transition-all duration-200 cursor-pointer group flex items-center justify-center"
+          className="relative w-14 h-14 rounded-full bg-gradient-to-tr from-orange-500 via-amber-500 to-orange-600 p-[2px] shadow-xl shadow-orange-500/40 hover:shadow-orange-500/60 hover:scale-105 active:scale-95 transition-all duration-200 cursor-pointer group flex items-center justify-center"
           title="Установить приложение на телефон / рабочий стол"
           aria-label="Установить PWA"
         >
           {/* Pulsing glow ring */}
           <span className="absolute -top-1 -right-1 flex h-4 w-4">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-85"></span>
-            <span className="relative inline-flex rounded-full h-4 w-4 bg-amber-500 border-2 border-white"></span>
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-85"></span>
+            <span className="relative inline-flex rounded-full h-4 w-4 bg-orange-500 border-2 border-white"></span>
           </span>
 
-          <div className="w-full h-full bg-slate-900 group-hover:bg-slate-800 rounded-full flex items-center justify-center text-white transition-colors">
-            <Download className="w-6 h-6 text-amber-400 group-hover:translate-y-0.5 transition-transform animate-bounce" style={{ animationDuration: '2s' }} />
+          <div className="w-full h-full bg-gradient-to-br from-orange-500 via-amber-500 to-orange-600 group-hover:from-orange-600 group-hover:to-amber-600 rounded-full flex items-center justify-center text-white transition-all shadow-inner">
+            <Download className="w-6 h-6 text-white group-hover:translate-y-0.5 transition-transform animate-bounce" style={{ animationDuration: '2s' }} />
           </div>
         </button>
       </div>

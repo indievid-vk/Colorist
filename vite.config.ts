@@ -28,7 +28,7 @@ export default defineConfig(() => {
           theme_color: '#090d16',
           background_color: '#090d16',
           display: 'standalone',
-          orientation: 'portrait',
+          orientation: 'portrait-primary',
           start_url: './',
           scope: './',
           icons: [
@@ -36,25 +36,31 @@ export default defineConfig(() => {
               src: 'icon_192x192.png',
               sizes: '192x192',
               type: 'image/png',
-              purpose: 'any maskable'
+              purpose: 'any'
+            },
+            {
+              src: 'icon_192x192.png',
+              sizes: '192x192',
+              type: 'image/png',
+              purpose: 'maskable'
             },
             {
               src: 'icon_256x256.png',
               sizes: '256x256',
               type: 'image/png',
-              purpose: 'any maskable'
+              purpose: 'any'
             },
             {
               src: 'icon_512x512.png',
               sizes: '512x512',
               type: 'image/png',
-              purpose: 'any maskable'
+              purpose: 'any'
             },
             {
-              src: 'icon.svg',
-              sizes: 'any',
-              type: 'image/svg+xml',
-              purpose: 'any maskable'
+              src: 'icon_512x512.png',
+              sizes: '512x512',
+              type: 'image/png',
+              purpose: 'maskable'
             }
           ]
         },
