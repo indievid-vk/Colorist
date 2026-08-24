@@ -15,10 +15,17 @@ export default defineConfig(() => {
         injectRegister: 'auto',
         includeAssets: [
           'favicon.ico',
+          'favicon.png',
           'apple-touch-icon.png',
           'icon_192x192.png',
+          'icon_192.png',
+          'pwa-192.png',
           'icon_256x256.png',
+          'icon_256.png',
+          'pwa-256.png',
           'icon_512x512.png',
+          'icon_512.png',
+          'pwa-512.png',
           'icon.svg'
         ],
         manifest: {
