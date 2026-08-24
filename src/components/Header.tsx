@@ -1,7 +1,7 @@
 import React from "react";
 import { ApplicationMode } from "../types";
 import { Sparkles, Shirt, Home, Layers, BookOpen, BookmarkCheck, Info } from "lucide-react";
-import appIcon from "../assets/icon_512x512.png";
+import { AppLogo } from "./AppLogo";
 
 interface HeaderProps {
   mode: ApplicationMode;
@@ -29,13 +29,7 @@ export const Header: React.FC<HeaderProps> = ({
         {/* Brand & Logo */}
         <div className="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-start">
           <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-amber-500 p-[1.5px] shadow-sm shadow-indigo-500/20 overflow-hidden flex-shrink-0">
-              <img
-                src={appIcon}
-                alt="Колорист"
-                className="w-full h-full object-cover rounded-[10px]"
-              />
-            </div>
+            <AppLogo size="md" />
             <div>
               <h1 className="text-base sm:text-lg font-bold tracking-tight text-slate-900 flex items-center gap-1.5 font-display">
                 Колорист <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-indigo-50 border border-indigo-200 text-indigo-700 font-sans font-bold">Иттен & ИИ</span>

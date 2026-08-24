@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Download, Share2, PlusSquare, Smartphone, X, Sparkles, Check, ArrowRight } from "lucide-react";
-import appIcon from "../../assets/icon_512x512.png";
+import { AppLogo } from "../AppLogo";
 
 export const InstallPrompt: React.FC = () => {
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
@@ -154,13 +154,7 @@ export const InstallPrompt: React.FC = () => {
           <div className="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl border border-slate-200 text-center space-y-4 animate-in zoom-in-95 duration-200">
             
             {/* Icon Header */}
-            <div className="w-16 h-16 rounded-3xl bg-gradient-to-tr from-indigo-600 to-amber-500 p-[2px] mx-auto shadow-lg shadow-indigo-500/25 overflow-hidden">
-              <img
-                src={appIcon}
-                alt="Колорист"
-                className="w-full h-full object-cover rounded-[22px]"
-              />
-            </div>
+            <AppLogo size="xl" className="mx-auto" />
 
             <div>
               <h3 className="text-lg font-bold text-slate-900 font-display">

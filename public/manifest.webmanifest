@@ -1,4 +1,5 @@
 {
+  "id": "./",
   "name": "Колорист — Умный подбор цветов",
   "short_name": "Колорист",
   "description": "Автономное PWA-приложение для колористического анализа, захвата цвета камерой и подбора гармоний по кругу Иттена",
@@ -8,6 +9,7 @@
   "background_color": "#090d16",
   "theme_color": "#090d16",
   "orientation": "portrait-primary",
+  "categories": ["lifestyle", "utilities", "productivity"],
   "icons": [
     {
       "src": "icon_192x192.png",

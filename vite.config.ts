@@ -22,6 +22,7 @@ export default defineConfig(() => {
           'icon.svg'
         ],
         manifest: {
+          id: './',
           name: 'Колорист — Умный подбор цветов',
           short_name: 'Колорист',
           description: 'Автономное PWA-приложение для колористического анализа, захвата цвета камерой и подбора гармоний по кругу Иттена',
@@ -31,6 +32,7 @@ export default defineConfig(() => {
           orientation: 'portrait-primary',
           start_url: './',
           scope: './',
+          categories: ['lifestyle', 'utilities', 'productivity'],
           icons: [
             {
               src: 'icon_192x192.png',

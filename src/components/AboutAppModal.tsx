@@ -1,6 +1,6 @@
 import React from "react";
 import { Info, Sparkles, Smartphone, ShieldCheck, Zap, AlertCircle, Heart, Mail, X } from "lucide-react";
-import appIcon from "../assets/icon_512x512.png";
+import { AppLogo } from "./AppLogo";
 
 interface AboutAppModalProps {
   isOpen: boolean;
@@ -17,13 +17,7 @@ export const AboutAppModal: React.FC<AboutAppModalProps> = ({ isOpen, onClose })
         {/* Header */}
         <div className="px-6 py-4 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-indigo-600/10 flex items-center justify-center text-indigo-600 overflow-hidden">
-              <img
-                src={appIcon}
-                alt="Колорист"
-                className="w-full h-full object-cover rounded-2xl"
-              />
-            </div>
+            <AppLogo size="lg" />
             <div>
               <h2 className="text-lg font-bold text-slate-900 font-display">О приложении «Колорист»</h2>
               <p className="text-xs text-slate-500">Автономное PWA-приложение полного цикла</p>
