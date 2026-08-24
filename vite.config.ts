@@ -16,6 +16,9 @@ export default defineConfig(() => {
         includeAssets: [
           'favicon.ico',
           'apple-touch-icon.png',
+          'icon_192x192.png',
+          'icon_256x256.png',
+          'icon_512x512.png',
           'icon.svg'
         ],
         manifest: {
@@ -29,6 +32,24 @@ export default defineConfig(() => {
           start_url: './',
           scope: './',
           icons: [
+            {
+              src: 'icon_192x192.png',
+              sizes: '192x192',
+              type: 'image/png',
+              purpose: 'any maskable'
+            },
+            {
+              src: 'icon_256x256.png',
+              sizes: '256x256',
+              type: 'image/png',
+              purpose: 'any maskable'
+            },
+            {
+              src: 'icon_512x512.png',
+              sizes: '512x512',
+              type: 'image/png',
+              purpose: 'any maskable'
+            },
             {
               src: 'icon.svg',
               sizes: 'any',

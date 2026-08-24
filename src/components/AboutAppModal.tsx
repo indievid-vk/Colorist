@@ -16,8 +16,15 @@ export const AboutAppModal: React.FC<AboutAppModalProps> = ({ isOpen, onClose })
         {/* Header */}
         <div className="px-6 py-4 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-indigo-600/10 flex items-center justify-center text-indigo-600">
-              <Info className="w-5 h-5" />
+            <div className="w-10 h-10 rounded-2xl bg-indigo-600/10 flex items-center justify-center text-indigo-600 overflow-hidden">
+              <img
+                src="./icon_512x512.png"
+                alt="Колорист"
+                className="w-full h-full object-cover rounded-2xl"
+                onError={(e) => {
+                  (e.target as HTMLElement).style.display = 'none';
+                }}
+              />
             </div>
             <div>
               <h2 className="text-lg font-bold text-slate-900 font-display">О приложении «Колорист»</h2>

@@ -86,10 +86,15 @@ export const WelcomeModal: React.FC = () => {
       <div className="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-200 text-center space-y-5 animate-in zoom-in-95 duration-200">
         
         {/* Celebration Badge */}
-        <div className="w-16 h-16 rounded-3xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-amber-500 p-[2px] mx-auto shadow-xl shadow-indigo-500/30">
-          <div className="w-full h-full bg-white rounded-[22px] flex items-center justify-center">
-            <Sparkles className="w-8 h-8 text-indigo-600 animate-pulse" />
-          </div>
+        <div className="w-16 h-16 rounded-3xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-amber-500 p-[2px] mx-auto shadow-xl shadow-indigo-500/30 overflow-hidden">
+          <img
+            src="./icon_512x512.png"
+            alt="Колорист"
+            className="w-full h-full object-cover rounded-[22px]"
+            onError={(e) => {
+              (e.target as HTMLElement).style.display = 'none';
+            }}
+          />
         </div>
 
         <div>

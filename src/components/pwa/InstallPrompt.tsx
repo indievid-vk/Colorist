@@ -153,10 +153,15 @@ export const InstallPrompt: React.FC = () => {
           <div className="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl border border-slate-200 text-center space-y-4 animate-in zoom-in-95 duration-200">
             
             {/* Icon Header */}
-            <div className="w-16 h-16 rounded-3xl bg-gradient-to-tr from-indigo-600 to-amber-500 p-[2px] mx-auto shadow-lg shadow-indigo-500/25">
-              <div className="w-full h-full bg-white rounded-[22px] flex items-center justify-center">
-                <Smartphone className="w-8 h-8 text-indigo-600" />
-              </div>
+            <div className="w-16 h-16 rounded-3xl bg-gradient-to-tr from-indigo-600 to-amber-500 p-[2px] mx-auto shadow-lg shadow-indigo-500/25 overflow-hidden">
+              <img
+                src="./icon_512x512.png"
+                alt="Колорист"
+                className="w-full h-full object-cover rounded-[22px]"
+                onError={(e) => {
+                  (e.target as HTMLElement).style.display = 'none';
+                }}
+              />
             </div>
 
             <div>
