@@ -30,7 +30,7 @@ export const InstallPrompt: React.FC = () => {
     setIsIOS(isApple);
     setIsAndroid(isAndroidDevice);
 
-    const alreadyPrompted = localStorage.getItem("pwaPromptedForever_v1");
+    const dismissedInSession = sessionStorage.getItem("pwa_install_dismissed_session");
 
     // 3. Global beforeinstallprompt listener
     const handlePromptAvailable = () => {
@@ -45,18 +45,17 @@ export const InstallPrompt: React.FC = () => {
     }
     window.addEventListener("pwa-prompt-available", handlePromptAvailable);
 
-    // 4. Auto-open installation modal on first visit (Android & Desktop/Mobile browsers)
+    // 4. Auto-open installation modal/sheet on page visit if not standalone
     const autoOpenTimer = setTimeout(() => {
-      if (!alreadyPrompted && !standalone && !(window as any).pwaPopupActive) {
+      if (!dismissedInSession && !standalone && !(window as any).pwaPopupActive) {
+        (window as any).pwaPopupActive = "install";
         if (isApple) {
-          // On iOS, keep the pulsing floating round button prominent
+          setShowIOSBottomSheet(true);
         } else {
-          // On Android / Desktop / Chrome: automatically open installation modal
-          (window as any).pwaPopupActive = "install";
           setShowAndroidModal(true);
         }
       }
-    }, 1200);
+    }, 600);
 
     return () => {
       clearTimeout(autoOpenTimer);
@@ -79,9 +78,8 @@ export const InstallPrompt: React.FC = () => {
           setDeferredPrompt(null);
           (window as any).deferredPrompt = null;
           (window as any).pwaPopupActive = null;
-          localStorage.setItem("pwaPromptedForever_v1", "true");
-          // Trigger welcome event
-          window.dispatchEvent(new CustomEvent("pwa-installed-success"));
+          sessionStorage.setItem("pwa_install_dismissed_session", "true");
+          // NOTE: Celebration modal will only appear inside the installed standalone PWA on first launch
         }
       } catch (err) {
         console.error("Install prompt error:", err);
@@ -89,26 +87,23 @@ export const InstallPrompt: React.FC = () => {
         setIsInstalling(false);
       }
     } else {
-      // Fallback for browsers when beforeinstallprompt is already handled or in iOS/Chrome menu
+      // Fallback for browsers when beforeinstallprompt is already handled or on iOS
       if (isIOS) {
         setShowAndroidModal(false);
         setShowIOSBottomSheet(true);
       } else {
-        setIsInstalling(true);
-        setTimeout(() => {
-          setIsInstalling(false);
-          setShowAndroidModal(false);
-          localStorage.setItem("pwaPromptedForever_v1", "true");
-          window.dispatchEvent(new CustomEvent("pwa-installed-success"));
-        }, 1000);
+        setShowAndroidModal(false);
+        (window as any).pwaPopupActive = null;
+        sessionStorage.setItem("pwa_install_dismissed_session", "true");
       }
     }
   };
 
   const handleDismiss = () => {
     setShowAndroidModal(false);
+    setShowIOSBottomSheet(false);
     (window as any).pwaPopupActive = null;
-    localStorage.setItem("pwaPromptedForever_v1", "true");
+    sessionStorage.setItem("pwa_install_dismissed_session", "true");
     window.dispatchEvent(new CustomEvent("pwa-popup-closed"));
   };
 
@@ -222,7 +217,7 @@ export const InstallPrompt: React.FC = () => {
                 </h3>
               </div>
               <button
-                onClick={() => setShowIOSBottomSheet(false)}
+                onClick={handleDismiss}
                 className="p-1.5 text-slate-400 hover:text-slate-700 rounded-full transition-colors cursor-pointer"
               >
                 <X className="w-5 h-5" />
@@ -264,10 +259,7 @@ export const InstallPrompt: React.FC = () => {
 
             {/* Close */}
             <button
-              onClick={() => {
-                setShowIOSBottomSheet(false);
-                localStorage.setItem("pwaPromptedForever_v1", "true");
-              }}
+              onClick={handleDismiss}
               className="w-full py-3 bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold rounded-2xl transition-all cursor-pointer"
             >
               Понятно

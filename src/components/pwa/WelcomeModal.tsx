@@ -59,17 +59,6 @@ export const WelcomeModal: React.FC = () => {
       }, 500);
       return () => clearTimeout(timer);
     }
-
-    // 2. Listen for post-install success event
-    const handleInstalledSuccess = () => {
-      triggerCelebration();
-    };
-
-    window.addEventListener("pwa-installed-success", handleInstalledSuccess);
-
-    return () => {
-      window.removeEventListener("pwa-installed-success", handleInstalledSuccess);
-    };
   }, []);
 
   const handleStart = () => {
